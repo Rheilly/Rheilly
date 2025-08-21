@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rheilly's Website</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f9;
+      color: #333;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    /* Sidebar */
+    nav {
+      background: #222;
+      color: #fff;
+      width: 200px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+    nav a {
+      display: block;
+      width: 140px;
+      text-align: center;
+      padding: 8px;
+      margin: 6px 0;
+      background: #444;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 6px;
+      transition: background 0.3s, transform 0.2s;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    nav a:hover, nav a.active {
+      background: #00c2a8;
+      color: #000;
+      transform: scale(1.05);
+    }
+
+    /* Content area */
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      background: #00c2a8;
+      color: #000;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 2;
+    }
+    section {
+      flex: 1;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      font-size: 1.2rem;
+      padding: 100px 20px 20px;
+      overflow-y: auto;
+    }
+    section.active {
+      display: flex;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    /* Home timeline style */
+    .home-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 600px;
+    }
+    .home-container img {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+      cursor: pointer;
+    }
+    .home-container p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      background: #fff;
+      padding: 15px;
+      border-radius: 6px;
+      box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+    }
+
+    /* Profile Bio Data */
+    .profile-container {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 40px;
+      max-width: 90%;
+      background: #fafafa;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
+    }
+    .bio-data {
+      flex: 2;
+      text-align: left;
+    }
+    .bio-data h2 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: #00c2a8;
+    }
+    .bio-data table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .bio-data td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    .bio-data td:first-child {
+      font-weight: bold;
+      width: 40%;
+    }
+    .profile-img {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+    .profile-img img {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #00c2a8;
+    }
+
+    /* Gallery Grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      width: 90%;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .gallery-grid img {
+      width: 100%;
+      height: 230px; 
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0px 3px 8px rgba(0,0,0,0.15);
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+    .gallery-grid img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Modal (Lightbox) */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal img {
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 10px;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.5);
+    }
+    .modal span {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      font-size: 2rem;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* About Section Styling */
+    .about-container {
+      max-width: 700px;   
+      margin: 0 auto;     
+      padding: 20px;
+      background: #fff3ec; 
+      border-radius: 10px;
+      box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    .about-container h1 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #d46a2e;
+    }
+
+    .about-container p {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #444;
+    }
+
+    #home { background: #e8f6f3; }
+    #profile { background: #fff; }
+    #gallery { background: #eef0ff; }
+    #about { background: #fceee8; }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: #222;
+      color: #aaa;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body { flex-direction: column; }
+      nav {
+        position: relative;
+        flex-direction: row;
+        width: 100%;
+        height: auto;
+        padding: 10px;
+      }
+      nav a { width: auto; margin: 4px; }
+      .content { margin-left: 0; }
+      header { position: relative; }
+      .profile-container { flex-direction: column; align-items: center; text-align: center; }
+      .bio-data table td:first-child { width: 35%; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .about-container { max-width: 90%; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <nav>
+    <a class="active" onclick="showSection('home', this)">Home</a>
+    <a onclick="showSection('profile', this)">Profile</a>
+    <a onclick="showSection('gallery', this)">Gallery</a>
+    <a onclick="showSection('about', this)">About</a>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Header -->
+    <header>
+      Welcome to Rheilly's Website
+    </header>
+
+    <!-- Home Section -->
+    <section id="home" class="active">
+      <div class="home-container">
+        <img src="images/image1.jpg" alt="Timeline Picture" onclick="openModal(this)">
+        <p>Welcome to my website as you can see in the image in this moment I'm enjoying view as the sun sets over the ocean.</p>
+      </div>
+    </section>
+
+    <!-- Profile Section (Bio Data + Pic) -->
+    <section id="profile">
+      <div class="profile-container">
+        <div class="bio-data">
+          <h2>Bio Data</h2>
+          <table>
+            <tr><td>Full Name:</td><td>Rheilly Marc C. Forte</td></tr>
+            <tr><td>Date of Birth:</td><td>May 09, 2005</td></tr>
+            <tr><td>Gender:</td><td>Male</td></tr>
+            <tr><td>Address:</td><td>Margaay Narvacan Ilocos Sur</td></tr>
+            <tr><td>Email:</td><td>rheillyforte@gmail.com</td></tr>
+            <tr><td>Phone:</td><td>09816753553</td></tr>
+            <tr><td>Hobbies:</td><td>Playing online games, Listen to music, Playing Instruments</td></tr>
+          </table>
+        </div>
+        <div class="profile-img">
+          <img src="images/image3.jpg" alt="Profile Picture">
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery">
+      <div>
+        <h1>Gallery</h1>
+        <div class="gallery-grid">
+          <img src="images/image2.jpg" alt="Gallery Image 1" onclick="openModal(this)">
+          <img src="images/image4.jpg" alt="Gallery Image 2" onclick="openModal(this)">
+          <img src="images/image5.jpg" alt="Gallery Image 3" onclick="openModal(this)">
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+      <div class="about-container">
+        <h1>About</h1>
+        <p>
+          Hi everyone! I'm <strong>Rheilly Marc C. Forte</strong>, 20 years old, living in 
+          <em>Margaay Narvacan Ilocos Sur</em>.  
+          I am an Information System Student. My hobbies include playing online games 
+          and listening to music.  
+          This website I created is all about my personal information and experiences.
+        </p>
+      </div>
+    </section>
+
+  <!-- Modal -->
+  <div id="imageModal" class="modal" onclick="closeModal()">
+    <span>&times;</span>
+    <img id="modalImg" src="">
+  </div>
+
+  <script>
+    function showSection(id, el) {
+      document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+
+      document.querySelectorAll("nav a").forEach(a => a.classList.remove("active"));
+      if(el.tagName.toLowerCase() === "a"){
+        el.classList.add("active");
+      }
+    }
+
+    // Open image modal
+    function openModal(imgElement) {
+      const modal = document.getElementById("imageModal");
+      const modalImg = document.getElementById("modalImg");
+      modal.style.display = "flex";
+      modalImg.src = imgElement.src;
+    }
+
+    // Close modal
+    function closeModal() {
+      document.getElementById("imageModal").style.display = "none";
+    }
+  </script>
+</body>
+</html>
